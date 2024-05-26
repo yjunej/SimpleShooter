@@ -23,4 +23,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	float AcceptanceRadius = 200;
+
+	UPROPERTY(EditAnywhere)
+	class UBehaviorTree* AIBehavior;
+
+	APawn* PlayerPawn;
 };
