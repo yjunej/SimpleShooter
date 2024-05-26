@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 #include "InputTriggers.h"
+#include "Gun.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -18,6 +19,8 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Setting Enhanced Input System
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController != nullptr)
 	{
@@ -27,6 +30,13 @@ void AShooterCharacter::BeginPlay()
 			Subsystem->AddMappingContext(IMC, 0);
 		}
 	}
+
+	// Spawn Gun
+	GetWorld()->SpawnActor<AGun>(GunClass);
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+
+	
+
 	
 }
 

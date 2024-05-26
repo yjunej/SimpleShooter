@@ -7,7 +7,7 @@
 #include "InputAction.h"
 #include "ShooterCharacter.generated.h"
 
-
+class AGun;
 
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
@@ -30,7 +30,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Enhanced Input
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	class UInputMappingContext* IMC;
 
@@ -50,6 +49,12 @@ public:
 	void Jump();
 	void Look(const FInputActionValue &Value);
 
-	
+
+	// Gun
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> GunClass;
+
+	UPROPERTY()
+	AGun* Gun;
 
 };
