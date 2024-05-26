@@ -23,11 +23,17 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	UFUNCTION(BlueprintPure)
+	bool IsDead() const;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 
 	// Enhanced Input
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
@@ -42,12 +48,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
 	class UInputAction* InputToJump;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input")
+	class UInputAction* InputToShoot;
+
 	UPROPERTY(EditAnywhere)
 	float RotationRate = 1;
 
 	void Move(const FInputActionValue &Value);
 	void Jump();
 	void Look(const FInputActionValue &Value);
+	void Shoot();
 
 
 	// Gun
@@ -56,5 +66,12 @@ public:
 
 	UPROPERTY()
 	AGun* Gun;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxHealth = 100;
+
+	UPROPERTY(VisibleAnywhere)
+	float Health;
+
 
 };

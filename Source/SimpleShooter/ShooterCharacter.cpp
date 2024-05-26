@@ -31,9 +31,13 @@ void AShooterCharacter::BeginPlay()
 		}
 	}
 
+	Health = MaxHealth;
+
 	// Spawn Gun
-	GetWorld()->SpawnActor<AGun>(GunClass);
+	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	Gun->SetOwner(this);
 
 	
 
@@ -55,6 +59,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	EnhancedInputComponent->BindAction(InputToMove, ETriggerEvent::Triggered, this, &AShooterCharacter::Move);
 	EnhancedInputComponent->BindAction(InputToJump, ETriggerEvent::Triggered, this, &AShooterCharacter::Jump);
 	EnhancedInputComponent->BindAction(InputToLook, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
+	EnhancedInputComponent->BindAction(InputToShoot, ETriggerEvent::Triggered, this, &AShooterCharacter::Shoot);
 
 }
 
@@ -92,3 +97,22 @@ void AShooterCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AShooterCharacter::Shoot()
+{
+	Gun->PullTrigger();
+}
+
+float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	float DamageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	DamageToApply = FMath::Min(Health, DamageToApply);
+	Health -= DamageToApply;
+	UE_LOG(LogTemp, Warning, TEXT("Health left %f"), Health);
+
+	return DamageToApply;
+}
+
+bool AShooterCharacter::IsDead() const
+{
+	return Health <= 0;
+}
