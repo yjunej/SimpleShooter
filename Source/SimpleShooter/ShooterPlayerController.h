@@ -14,6 +14,9 @@ class SIMPLESHOOTER_API AShooterPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+
 public:
 	virtual void GameHasEnded(AActor* EndGameFocus, bool bIsWinner) override;
 
@@ -23,6 +26,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> WinScreenClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> HUDClass;
+
+	UPROPERTY()
+	UUserWidget* HUD;
 
 	UPROPERTY(EditAnywhere)
 	float RestartDelay = 5.f;
