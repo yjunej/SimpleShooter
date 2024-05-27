@@ -7,6 +7,8 @@
 #include "InputAction.h"
 #include "InputTriggers.h"
 #include "Gun.h"
+#include "Components/CapsuleComponent.h"
+#include "ShooterGameMode.h"
 
 
 
@@ -41,9 +43,6 @@ void AShooterCharacter::BeginPlay()
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	Gun->SetOwner(this);
-
-	
-
 	
 }
 
@@ -111,6 +110,18 @@ float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent cons
 	DamageToApply = FMath::Min(Health, DamageToApply);
 	Health -= DamageToApply;
 	UE_LOG(LogTemp, Warning, TEXT("Health left %f"), Health);
+
+	if (IsDead())
+	{
+		AShooterGameMode* GameMode = GetWorld()->GetAuthGameMode<AShooterGameMode>();
+		if (GameMode != nullptr)
+		{
+			GameMode->PawnKilled(this);
+		}
+		DetachFromControllerPendingDestroy();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	}
 
 	return DamageToApply;
 }
