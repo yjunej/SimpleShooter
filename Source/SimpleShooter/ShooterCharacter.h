@@ -74,7 +74,7 @@ public:
 	float MaxHealth = 100;
 
 	UPROPERTY(VisibleAnywhere)
-	float Health;
+	float Health = 100;
 
 
 };
